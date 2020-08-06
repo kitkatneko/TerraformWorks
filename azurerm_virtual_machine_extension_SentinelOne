@@ -1,0 +1,22 @@
+resource "azurerm_virtual_machine_extension" "SentinelOne" {
+  name                 = "SentinelOne.WindowsExtension"
+  virtual_machine_id   = azurerm_windows_virtual_machine.example.id # the target
+  publisher            = "SentinelOne.WindowsExtension"
+  type                 = "WindowsExtension"
+  type_handler_version = "1.0"
+  tags = var.tags
+
+  # Settings reference: https://support.sentinelone.com/hc/en-us/articles/360039473293-Installing-Agents-with-Azure
+  # Version numbers reference: https://support.sentinelone.com/hc/en-us/articles/360043505873-4-0-Windows-Agent-Release-Notes 
+  settings = <<SETTINGS
+    {
+        "WindowsAgentVersion": "4.0.5.96", 
+        "SiteToken": "from your sentinel package page"
+    }
+  SETTINGS
+  protected_settings = <<PROTECTED_SETTINGS
+  {
+      "SentinelOneConsoleAPIKey": "from you account"
+  }
+  PROTECTED_SETTINGS
+}
